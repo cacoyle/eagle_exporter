@@ -1,0 +1,6 @@
+#!env/bin/python
+
+CLOUD_ID = ''
+INSTALL_CODE = ''
+EAGLE_IP = ''
+
