@@ -8,7 +8,7 @@ import asyncio
 import aiohttp
 
 from aioeagle import EagleHub
-from prometheus_client import start_http_server, Summary, Gauge, Enum
+from prometheus_client import start_http_server, Summary, Gauge, Enum, Counter
 
 import config
 
@@ -23,7 +23,7 @@ connected = Enum(
 )
 
 demand = Gauge('instantaneous_demand', 'Instantaneous Demand')
-consumed = Gauge('total_consumed', 'Current Consumed KWh to date')
+consumed = Counter('total_consumed', 'Current Consumed KWh to date')
 
 @REQUEST_TIME.time()
 async def process_request():
