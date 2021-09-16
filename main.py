@@ -2,6 +2,8 @@
 
 from time import sleep
 
+from aiohttp.client_exceptions import ServerDisconnectedError
+
 import asyncio
 import aiohttp
 
@@ -29,19 +31,22 @@ async def process_request():
         await run(session)
 
 async def run(session):
-    hub = EagleHub(
-        session,
-        config.CLOUD_ID,
-        config.INSTALL_CODE,
-        host=config.EAGLE_IP
-    )
+    try:
+        hub = EagleHub(
+            session,
+            config.CLOUD_ID,
+            config.INSTALL_CODE,
+            host=config.EAGLE_IP
+        )
 
-    devices = await hub.get_device_list()
-    metrics = await devices[0].get_device_query()
+        devices = await hub.get_device_list()
+        metrics = await devices[0].get_device_query()
 
-    connected.state('connected' if devices[0].is_connected else 'disconnected')
-    demand.set(metrics['zigbee:InstantaneousDemand']['Value'])
-    consumed.set(metrics['zigbee:CurrentSummationDelivered']['Value'])
+        connected.state('connected' if devices[0].is_connected else 'disconnected')
+        demand.set(metrics['zigbee:InstantaneousDemand']['Value'])
+        consumed.set(metrics['zigbee:CurrentSummationDelivered']['Value'])
+    except ServerDisconnectedError as e:
+        print(e)
 
 
 if __name__ == '__main__':
