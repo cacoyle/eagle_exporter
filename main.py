@@ -23,7 +23,7 @@ connected = Enum(
 )
 
 demand = Gauge('instantaneous_demand', 'Instantaneous Demand')
-consumed = Counter('total_consumed', 'Current Consumed KWh to date')
+consumed = Gauge('total_consumed', 'Current Consumed KWh to date')
 
 @REQUEST_TIME.time()
 async def process_request():
